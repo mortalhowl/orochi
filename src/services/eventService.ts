@@ -53,3 +53,23 @@ export const getEventBySlug = async (
 
   return data;
 };
+
+/**
+ * Lấy sự kiện đã công bố gần đây nhất để hiển thị trên trang đăng nhập.
+ * @returns Một object sự kiện hoặc null.
+ */
+export const getLatestPublishedEvent = async (): Promise<Event | null> => {
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error && error.code !== 'PGRST116') { // Bỏ qua lỗi not found
+    console.error('Error fetching latest event:', error);
+  }
+
+  return data;
+};

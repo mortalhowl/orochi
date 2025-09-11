@@ -2,6 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/auth';
+import { signInWithEmail } from '@/lib/auth';
 import type { Profile, Role, Staff } from '@/types/user';
 import type { UserWithRole } from '@/types/auth';
 
@@ -42,4 +43,33 @@ export const getFullCurrentUser = async (): Promise<UserWithRole | null> => {
     profile: customerProfile,
     staff: null,
   };
+};
+
+/**
+ * Xử lý luồng đăng nhập cho Admin/Staff.
+ * @param credentials - Email và password.
+ * @returns Thông tin chi tiết của staff sau khi đăng nhập thành công.
+ */
+export const loginAdmin = async (credentials: Parameters<typeof signInWithEmail>[0]) => {
+  const { session } = await signInWithEmail(credentials);
+
+  if (!session?.user) {
+    throw new Error('Đăng nhập thất bại, không có thông tin người dùng.');
+  }
+
+  // Sau khi đăng nhập, lấy thông tin staff để xác thực
+  const { data: staffProfile, error: staffError } = await supabase
+    .from('staff')
+    .select('*, roles(*)')
+    .eq('id', session.user.id)
+    .single();
+  
+  if (staffError || !staffProfile) {
+    // Đăng xuất người dùng nếu họ không phải là staff
+    await supabase.auth.signOut();
+    throw new Error('Tài khoản này không có quyền truy cập trang quản trị.');
+  }
+
+  // Trả về user đầy đủ thông tin
+  return { ...session.user, profile: null, staff: staffProfile };
 };
