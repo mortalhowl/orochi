@@ -33,9 +33,9 @@ export const getCustomerDetails = async (
     .select(
       `
       *,
-      orders!user_id(*) 
+      orders(*) 
     `
-      // SỬA Ở ĐÂY: orders!user_id(*) báo Supabase tìm các order có user_id khớp với id của profile này
+      // Sau khi thiết lập foreign key, Supabase sẽ hiểu mối quan hệ ngược này
     )
     .eq('id', userId)
     .single();

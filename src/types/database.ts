@@ -551,7 +551,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payment_logs: {
         Row: {
@@ -931,6 +939,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_in_ticket: {
+        Args: { p_gate: string; p_staff_id: string; p_ticket_id: string }
+        Returns: Json
+      }
       create_order: {
         Args: {
           p_discount_amount: number
@@ -941,6 +953,22 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      create_staff_user: {
+        Args: {
+          p_email: string
+          p_name: string
+          p_password: string
+          p_role_id: string
+        }
+        Returns: Json
+      }
+      get_all_roles: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+        }[]
       }
     }
     Enums: {
