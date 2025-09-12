@@ -15,7 +15,7 @@ export const AdminSidebar = ({ isCollapsed, setCollapsed }: AdminSidebarProps) =
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <a href="/" className="flex items-center gap-2 font-semibold">
             <img src="/logo.png" alt="Orochi Logo" className="h-8 w-8" />
-            {!isCollapsed && <span>Orochi Admin</span>}
+            {!isCollapsed && <span>Orochi</span>}
           </a>
           {/* Nút toggle sẽ không hiển thị trên mobile, chỉ trên desktop/tablet */}
         </div>

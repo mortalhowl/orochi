@@ -3,7 +3,9 @@ import { Menu, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { AdminNavLinks } from './AdminNavLinks'; // Sẽ tạo component này ở bước sau
+import { AdminNavLinks } from './AdminNavLinks';
+import { ThemeToggle } from '../common/ThemeToggle'; // <-- Import
+import { Notifications } from './Notifications'; // <-- Import
 
 export const AdminHeader = () => {
   return (
@@ -16,28 +18,34 @@ export const AdminHeader = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <AdminNavLinks />
+          <AdminNavLinks isCollapsed={false} /> {/* Sidebar mobile luôn mở rộng */}
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1">
         {/* Có thể thêm thanh tìm kiếm ở đây */}
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <UserCircle className="h-5 w-5" />
-            <span className="sr-only">Mở menu người dùng</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Cài đặt</DropdownMenuItem>
-          <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Đăng xuất</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      
+      {/* Thêm các component mới vào đây */}
+      <div className="flex items-center gap-4">
+        <Notifications />
+        <ThemeToggle />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="rounded-full">
+              <UserCircle className="h-5 w-5" />
+              <span className="sr-only">Mở menu người dùng</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Cài đặt</DropdownMenuItem>
+            <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Đăng xuất</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 };

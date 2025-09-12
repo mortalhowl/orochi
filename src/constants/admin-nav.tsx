@@ -21,19 +21,19 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     icon: <LayoutDashboard className="h-5 w-5" />,
   },
   {
-    title: 'Quản lý Sự kiện',
+    title: 'Sự kiện',
     href: ROUTES.ADMIN.EVENTS,
     icon: <Calendar className="h-5 w-5" />,
     permission: PERMISSIONS.EVENTS_READ,
   },
   {
-    title: 'Quản lý Đơn hàng',
+    title: 'Đơn hàng',
     href: ROUTES.ADMIN.ORDERS,
     icon: <ShoppingCart className="h-5 w-5" />,
     permission: PERMISSIONS.ORDERS_READ,
   },
   {
-    title: 'Quản lý Khách hàng',
+    title: 'Khách hàng',
     href: ROUTES.ADMIN.CUSTOMERS,
     icon: <Users className="h-5 w-5" />,
   },
@@ -44,12 +44,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     permission: PERMISSIONS.TICKETS_CHECKIN,
   },
   {
-    title: 'Quản lý Tin tức',
+    title: 'Tin tức',
     href: '#', 
     icon: <Newspaper className="h-5 w-5" />,
   },
   {
-    title: 'Quản lý Gallery',
+    title: 'Gallery',
     href: '#', 
     icon: <GalleryHorizontal className="h-5 w-5" />,
   },
