@@ -561,6 +561,30 @@ export type Database = {
           },
         ]
       }
+      password_resets: {
+        Row: {
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: number
+          otp_hash: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          expires_at: string
+          id?: number
+          otp_hash: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: number
+          otp_hash?: string
+        }
+        Relationships: []
+      }
       payment_logs: {
         Row: {
           amount: number

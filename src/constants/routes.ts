@@ -26,6 +26,7 @@ export const ROUTES = {
   ADMIN: {
     DASHBOARD: '/admin',
     LOGIN: '/admin/login',
+    FORGOT_PASSWORD: '/admin/forgot-password',
     EVENTS: '/admin/events',
     EVENT_CREATE: '/admin/events/create',
     EVENT_EDIT: (id: string) => `/admin/events/${id}/edit`,

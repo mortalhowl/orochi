@@ -42,11 +42,11 @@ export const AdminLoginForm = () => {
   return (
     <div className="lg:p-8 flex items-center h-full">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-        <div className="flex flex-col space-y-2 text-center">
-            <img src="/logo.png" alt="Orochi Logo" className="w-24 h-24 mx-auto" />
+        {/* <div className="flex flex-col space-y-2 text-center">
+          <img src="/logo.png" alt="Orochi Logo" className="w-24 h-24 mx-auto" />
           <h1 className="text-2xl font-semibold tracking-tight">Đăng nhập Admin</h1>
           <p className="text-sm text-muted-foreground">Nhập email và mật khẩu của bạn</p>
-        </div>
+        </div> */}
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -54,14 +54,15 @@ export const AdminLoginForm = () => {
             {form.formState.errors.email && <p className="text-xs text-red-500">{form.formState.errors.email.message}</p>}
           </div>
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-                <Label htmlFor="password">Mật khẩu</Label>
-                <Link to={ROUTES.ADMIN.LOGIN} className="text-sm text-muted-foreground hover:underline">
+            <Label htmlFor="password">Mật khẩu</Label>
+            <Input id="password" type="password" {...form.register('password')} />
+            {form.formState.errors.password && <p className="text-xs text-red-500">{form.formState.errors.password.message}</p>}
+            <div className="flex">
+              <Link to={ROUTES.ADMIN.FORGOT_PASSWORD} className="text-sm text-muted-foreground hover:underline">
                     Quên mật khẩu?
                 </Link>
             </div>
-            <Input id="password" type="password" {...form.register('password')} />
-            {form.formState.errors.password && <p className="text-xs text-red-500">{form.formState.errors.password.message}</p>}
+
           </div>
           <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}

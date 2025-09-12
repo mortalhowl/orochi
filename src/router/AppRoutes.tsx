@@ -8,9 +8,12 @@ import { AdminAuthGuard } from './AdminAuthGuard';
 import { ROUTES } from '@/constants/routes'; // <--- SỬA LỖI 1: Thêm import này
 import { AdminLayout } from '@/pages/admin/AdminLayout';
 
+//import page components
+import { ForgotPasswordPage } from '@/pages/admin/ForgotPasswordPage';
+
 // Giả sử có 2 trang placeholder
 const DashboardPage = () => <div>Admin Dashboard</div>;
-const ForgotPasswordPage = () => <div>Forgot Password Page</div>;
+// const ForgotPasswordPage = () => <div>Forgot Password Page</div>;
 
 const AppRoutes = () => {
   return (
@@ -23,7 +26,6 @@ const AppRoutes = () => {
           {/* Admin Routes */}
           <Route path={ROUTES.ADMIN.LOGIN} element={<AdminLoginPage />} />
           
-          {/* SỬA LỖI 2: Bỏ comment dòng dưới đây */}
           <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} /> 
 
           <Route element={<AdminAuthGuard />}>
