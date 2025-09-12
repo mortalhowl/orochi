@@ -6,6 +6,7 @@ import NotFoundPage from '@/pages/NotFoundPage';
 import { AdminLoginPage } from '@/pages/admin/AdminLoginPage';
 import { AdminAuthGuard } from './AdminAuthGuard';
 import { ROUTES } from '@/constants/routes'; // <--- SỬA LỖI 1: Thêm import này
+import { AdminLayout } from '@/pages/admin/AdminLayout';
 
 // Giả sử có 2 trang placeholder
 const DashboardPage = () => <div>Admin Dashboard</div>;
@@ -26,9 +27,12 @@ const AppRoutes = () => {
           <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} /> 
 
           <Route element={<AdminAuthGuard />}>
-            <Route path={ROUTES.ADMIN.DASHBOARD} element={<DashboardPage />} />
-            {/* ... các route admin được bảo vệ khác sẽ ở đây ... */}
-          </Route>
+        <Route element={<AdminLayout />}>  {/* Bọc các trang admin bằng layout */}
+          <Route path={ROUTES.ADMIN.DASHBOARD} element={<DashboardPage />} />
+          {/* Thêm các route admin khác ở đây, ví dụ: */}
+          {/* <Route path={ROUTES.ADMIN.ORDERS} element={<AdminOrdersPage />} /> */}
+        </Route>
+      </Route>
           
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
