@@ -24,47 +24,36 @@ serve(async (req) => {
 
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '' // Dùng Service Role Key
     );
     if(!Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')) {
         throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
     }
     
-    // SỬA LẠI LOGIC TẠI ĐÂY
-    // Bước 1: Tìm user trong bảng auth.users bằng email
-    console.log(`Checking for user in auth.users with email: ${email}`);
-    const { data: authUser, error: authUserError } = await supabaseAdmin
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .single();
-
-    if (authUserError || !authUser) {
-      console.warn('User email not found in auth.users table.');
-      throw new Error('Email không tồn tại trong hệ thống.');
-    }
-    console.log('User found in auth.users with ID:', authUser.id);
+    // 1. Kiểm tra user tồn tại
+    console.log(`Checking for staff with email: ${email}`);
+    const { data: user, error: userError } = await supabaseAdmin.from('staff').select('id').eq('email', email).single();
     
-    // Bước 2: Dùng ID user tìm được để xác minh họ có phải là nhân viên không
-    console.log(`Verifying if user ID ${authUser.id} exists in staff table.`);
-    const { data: staff, error: staffError } = await supabaseAdmin
-      .from('staff')
-      .select('id')
-      .eq('id', authUser.id)
-      .single();
-      
-    if (staffError || !staff) {
-      console.warn(`Verification failed: User ID ${authUser.id} is not a staff member.`);
-      throw new Error('Tài khoản này không phải là tài khoản nhân viên.');
+    if (userError) {
+      // Nếu lỗi không phải là "không tìm thấy" thì mới là lỗi nghiêm trọng
+      if (userError.code !== 'PGRST116') {
+        console.error('Database error checking user:', userError);
+        throw new Error('Lỗi cơ sở dữ liệu khi kiểm tra người dùng.');
+      }
     }
-    console.log('User is verified as a staff member.');
+    if (!user) {
+        console.warn('User not found in staff table.');
+        throw new Error('Email không tồn tại trong hệ thống nhân viên.');
+    }
+    console.log('User found:', user.id);
 
-    // Logic tạo và gửi OTP vẫn giữ nguyên
+    // 2. Tạo OTP và thời gian hết hạn
     const otp = String(Math.floor(100000 + Math.random() * 900000));
     const expires_at = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const otp_hash = await hashOtp(otp);
-    console.log(`Generated OTP for ${email}.`);
+    console.log(`Generated OTP for ${email}. OTP will expire at ${expires_at}`);
 
+    // 3. Lưu OTP đã băm vào CSDL
     const { error: insertError } = await supabaseAdmin.from('password_resets').insert({ email, otp_hash, expires_at });
     if (insertError) {
         console.error('Error inserting OTP:', insertError);
@@ -72,6 +61,7 @@ serve(async (req) => {
     }
     console.log('OTP hash stored successfully.');
 
+    // 4. Gọi function `send-email` để gửi OTP
     console.log('Invoking send-email function...');
     const { error: invokeError } = await supabaseAdmin.functions.invoke('send-email', {
       body: {
@@ -91,9 +81,10 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (error) {
+    // Trả về lỗi cụ thể hơn
     console.error('An error occurred:', error.message);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 400,
+      status: 400, // Sử dụng 400 cho các lỗi logic
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
